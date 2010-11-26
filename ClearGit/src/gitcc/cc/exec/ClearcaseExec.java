@@ -202,17 +202,4 @@ public class ClearcaseExec extends Exec implements Clearcase {
 	public boolean exists(String path) {
 		return toFile(path).exists();
 	}
-
-	/**
-	 * @return true if the cleartool command line tool is available,
-	 * 			false if an attempt to run the command fails
-	 */
-	public static boolean isAvailable(Config config) {
-		try {
-			Runtime.getRuntime().exec(config.getCleartool()).destroy();
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
 }

@@ -10,8 +10,7 @@ public class CleartoolFactory implements ClearcaseFactory {
 
 	@Override
 	public Clearcase createClearcase(Config config) throws ClearcaseEnvironmentNotSetup {
-		boolean isCleartoolAvailable = ClearcaseExec.isAvailable(config);
-		if (!isCleartoolAvailable) {
+		if (!isCleartoolAvailable(config)) {
 			throw new ClearcaseEnvironmentNotSetup("executing 'cleartool' command fails");
 		}
 
@@ -19,5 +18,18 @@ public class CleartoolFactory implements ClearcaseFactory {
 			return new gitcc.cc.exec.UCMExec();
 		}
 		return new gitcc.cc.exec.ClearcaseExec();
+	}
+
+	/**
+	 * @return true if the cleartool command line tool is available,
+	 * 			false if an attempt to run the command fails
+	 */
+	private boolean isCleartoolAvailable(Config config) {
+		try {
+			Runtime.getRuntime().exec(config.getCleartool()).destroy();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
