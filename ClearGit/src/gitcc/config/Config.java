@@ -1,10 +1,15 @@
 package gitcc.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
 
 public class Config {
 
@@ -29,6 +34,13 @@ public class Config {
 	private String remote;
 	private String cleartool = "cleartool";
 	private boolean merge;
+	
+	// fileset options
+	private Boolean filesetCaseSensitive = null;
+	private String filesetIncludes = null;
+	private String filesetExcludes = null;
+	private String filesetIncludesFile = null;
+	private String filesetExcludesFile = null;
 	
 	private String smtp;
 	private String sender;
@@ -112,6 +124,56 @@ public class Config {
 	}
 
 	public String[] getInclude() {
+		/*
+		 * This may not be the best place to put this, but to get all the
+		 * includes we also need to get the directories specified using
+		 * the ant format.
+		 */
+		if (filesetIncludes != null || filesetIncludesFile != null) {
+			Project p = new Project();
+
+			File testDir = new File(".");
+			
+	        FileSet fs = new FileSet();
+	        fs.setProject(p);
+	        fs.setDir(testDir);
+	        
+	        if (filesetIncludes != null) {
+	        	fs.setIncludes(filesetIncludes);
+	        }
+	        if (filesetIncludesFile != null) {
+	        	fs.setIncludesfile(new File(filesetIncludesFile));
+	        }
+	        if (filesetExcludes != null) {
+	        	fs.setExcludes(filesetExcludes);
+	        }
+	        if (filesetExcludesFile != null) {
+	        	fs.setExcludesfile(new File(filesetExcludesFile));
+	        }
+	        if (filesetCaseSensitive != null) {
+	        	fs.setCaseSensitive(filesetCaseSensitive);
+	        }
+
+	        // This is what we do when we go the next step and allow
+	        // the user to reference a fileset XML element with nested
+	        // <filename> elements.
+//	        fs.createInclude().setName("**/*");
+//	        fs.createInclude().setName("**/*.jar");
+
+	        // For time being only directories are supported.
+	        // It should be easy to support file inclusion and exclusion.
+	        
+	        DirectoryScanner ds = fs.getDirectoryScanner(p);
+	        String[] files = ds.getIncludedFiles();
+	        String[] dirs = ds.getIncludedDirectories();
+
+	        List<String> allDirectories = new ArrayList<String>();
+	        allDirectories.addAll(Arrays.asList(dirs));
+	        allDirectories.addAll(Arrays.asList(include));
+			
+			return allDirectories.toArray(new String[0]);
+		}
+		
 		return include;
 	}
 
@@ -265,4 +327,45 @@ public class Config {
 	public boolean isMerge() {
 		return merge;
 	}
+
+	public boolean isFilesetCasesensitive() {
+		return filesetCaseSensitive;
+	}
+
+	public void setFilesetCasesensitive(boolean caseSensitive) {
+		this.filesetCaseSensitive = caseSensitive;
+	}
+
+	public String getFilesetIncludes() {
+		return filesetIncludes;
+	}
+
+	public void setFilesetIncludes(String includes) {
+		this.filesetIncludes = includes;
+	}
+
+	public String getFilesetExcludes() {
+		return filesetExcludes;
+	}
+
+	public void setFilesetExcludes(String excludes) {
+		this.filesetExcludes = excludes;
+	}
+
+	public String getFilesetIncludesfile() {
+		return filesetIncludesFile;
+	}
+
+	public void setFilesetIncludesfile(String includesFile) {
+		this.filesetIncludesFile = includesFile;
+	}
+
+	public String getFilesetExcludesfile() {
+		return filesetExcludesFile;
+	}
+
+	public void setFilesetExcludesfile(String excludesFile) {
+		this.filesetExcludesFile = excludesFile;
+	}
+
 }
