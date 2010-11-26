@@ -16,7 +16,12 @@ public class CCVersion {
 	}
 
 	public String[] getBranches() {
+		// TODO: figure out correct separator a better way.
 		String[] branches = version.split("/");
+		if (branches.length == 1) {
+			// Try again with Windows separator
+			branches = version.split("\\\\");
+		}
 		return Arrays.copyOfRange(branches, 1, branches.length - 1);
 	}
 

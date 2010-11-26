@@ -123,10 +123,17 @@ public class CCHistoryParser {
 			CCCommit commit = j.next();
 			for (Iterator<CCFile> k = commit.getFiles().iterator(); k.hasNext();) {
 				String file = k.next().getFile();
+				
+				boolean match = false;
 				for (String f : i) {
-					if (!file.equals(f) && !file.startsWith(f + "/")) {
-						k.remove();
+					// TODO is there a better way to do this so that it works on both Windows and Linux?
+					if (file.equals(f) || file.startsWith(f + "/") || file.startsWith(f + "\\")) {
+						match = true;
+						break;
 					}
+				}
+				if (!match) {
+					k.remove();
 				}
 			}
 			if (commit.getFiles().isEmpty()) {

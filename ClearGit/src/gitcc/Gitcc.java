@@ -15,6 +15,7 @@ import gitcc.git.GitImpl;
 import gitcc.util.ExecException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
@@ -40,7 +41,12 @@ public class Gitcc {
 		if (!parser.parseConfig(config, new File(git.getRoot(), ".git/gitcc")))
 			fail("Missing configuration file: .git/gitcc");
 		parser.parseConfig(config, new File(git.getRoot(), ".gitcc_config"));
-		parser.loadUsers(config, new File(git.getRoot(), ".git/users"));
+		
+		try {
+			parser.loadUsers(config, new File(git.getRoot(), ".git/users"));
+		} catch (FileNotFoundException e) {
+			fail("No 'users' file found in the .git directory.");
+		}
 
 		command.cc = createClearcase(command.config);
 		command.cc.setConfig(command.config);
@@ -83,7 +89,7 @@ public class Gitcc {
 		 * in which case the user cannot build the ClearGit.ccrc jar.
 		 */
 		String [] factoryClassNames = new String [] {
-//				"gitcc.cc.cleartool.CleartoolFactory",
+				"gitcc.cc.cleartool.CleartoolFactory",
 				"gitcc.ccrc.CcrcFactory"
 		};
 
