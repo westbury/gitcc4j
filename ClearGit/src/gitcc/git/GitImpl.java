@@ -65,9 +65,9 @@ public class GitImpl extends Exec implements Git {
 	}
 
 	@Override
-	public List<GitCommit> log(String from) {
+	public List<GitCommit> log(String range) {
 		String result = exec("log", "-z", "--first-parent", "--reverse",
-				"--pretty=format:" + LOG_FORMAT, from);
+				"--pretty=format:" + LOG_FORMAT, range);
 		return util.parseLog(result);
 	}
 
@@ -88,8 +88,7 @@ public class GitImpl extends Exec implements Git {
 
 	@Override
 	public byte[] catFile(String sha, String file) {
-		String blob = exec("ls-tree", "-z", sha, file);
-		blob = util.parseLsTree(blob);
+		String blob = getBlob(sha, file);
 		return _exec("cat-file", "blob", blob);
 	}
 
@@ -123,7 +122,7 @@ public class GitImpl extends Exec implements Git {
 	}
 
 	@Override
-	public String getBlob(String file, String sha) {
+	public String getBlob(String sha, String file) {
 		return exec("ls-tree", "-z", sha, file).split(" ")[2].split("\t")[0];
 	}
 

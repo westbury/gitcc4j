@@ -72,7 +72,7 @@ public class Transaction extends Common {
 	private void stage(String file) {
 		if (checkout(file)) {
 			String hash = git.hashObject(cc.toFile(file).getAbsolutePath());
-			String blob = git.getBlob(file, mergeBase);
+			String blob = git.getBlob(mergeBase, file);
 			if (!hash.equals(blob)) {
 				String s = "File has been modified: %s. Try rebasing.";
 				throw new CheckinException(String.format(s, file));

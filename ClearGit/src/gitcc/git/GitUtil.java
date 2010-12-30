@@ -23,10 +23,6 @@ public class GitUtil {
 		return new GitCommit(s[0], s[1], s[2].trim());
 	}
 
-	public String parseLsTree(String blob) {
-		return blob.split(" ")[2].substring(0, 40);
-	}
-
 	public List<FileStatus> parseDiff(String result) {
 		List<FileStatus> log = new ArrayList<FileStatus>();
 		if (result.isEmpty())

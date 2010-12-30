@@ -90,7 +90,7 @@ public class TransactionTest extends TestCase {
 		cc.checkout(file);
 		EasyMock.expect(cc.toFile(file)).andReturn(new File("/" + file));
 		EasyMock.expect(git.hashObject("/" + file)).andReturn(hash1);
-		EasyMock.expect(git.getBlob(file, "base")).andReturn(hash2);
+		EasyMock.expect(git.getBlob("base", file)).andReturn(hash2);
 	}
 
 	private void write(String a) {

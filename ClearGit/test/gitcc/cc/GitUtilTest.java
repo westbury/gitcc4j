@@ -26,11 +26,6 @@ public class GitUtilTest extends TestCase {
 		assertEquals("Snapshot", commits.get(0).getMessage());
 	}
 
-	public void testParseLsTree() {
-		String sha = "54586b18b6319c6252f9c0725399f1899db32ecd";
-		assertEquals(sha, util.parseLsTree("100644 blob " + sha + "\tfile"));
-	}
-
 	public void testParseDiff() {
 		List<FileStatus> s = util
 				.parseDiff("A\0a\0D\0d\0M\0m\0R\0r1\0r2\0C\0c1\0c2");
