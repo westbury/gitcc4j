@@ -58,7 +58,23 @@ public interface Git {
 
 	void branch(String branch);
 
-	void branchForce(String branch, String id);
+	/**
+	 * Reset <code>branch</code> to the commit identified by <code>id</code>.
+	 * The branch head will be set to this commit even if the branch already exists.
+	 * 
+	 * @param branchName
+	 * @param commitId
+	 */
+	void branchForce(String branchName, String commitId);
+
+	/**
+	 * Tag the commit identified by <code>id</code> with a tag with a label given by <code>tag</code>.
+	 * If the tag already exists then it will be moved.
+	 * 
+	 * @param tagName
+	 * @param commitId
+	 */
+	void tagForce(String tagName, String commitId);
 
 	void checkout(String branch);
 

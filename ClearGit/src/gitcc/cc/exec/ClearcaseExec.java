@@ -112,8 +112,7 @@ public class ClearcaseExec extends Exec implements Clearcase {
 
 	@Override
 	public void deliver() {
-		exec("deliver", "-f");
-		exec("deliver", "-com", "-f");
+		// "deliver" is a UCM tool only.  Do nothing if not UCM.
 	}
 
 	@Override

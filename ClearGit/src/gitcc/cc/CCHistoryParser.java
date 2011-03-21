@@ -84,6 +84,15 @@ public class CCHistoryParser {
 		return DIR.equals(string) ? Status.Directory : Status.Added;
 	}
 
+	/**
+	 * Takes the commits to ClearCase, which consist of a commit for each file
+	 * checked-in, and combine commits with same message, author, and branch.
+	 * The input list of commits will have one file in each commit. The
+	 * resulting list will have commits that typically have multiple files per
+	 * commit.
+	 * 
+	 * @param commits
+	 */
 	private void filter(Collection<CCCommit> commits) {
 		CCCommit last = null;
 		for (Iterator<CCCommit> i = commits.iterator(); i.hasNext();) {
@@ -142,6 +151,16 @@ public class CCHistoryParser {
 		}
 	}
 
+	/**
+	 * ClearCase does not have the same concept of cross-file commits
+	 * as does GIT.  ClearCase commits are on individual files only.
+	 * We therefore look at the checkin message, author, and branch.
+	 * If they all match then we treat them as one commit in GIT.
+	 * 
+	 * @param last
+	 * @param next
+	 * @return
+	 */
 	private boolean equals(CCCommit last, CCCommit next) {
 		return getSubject(last.getMessage()).equals(
 				getSubject(next.getMessage()))

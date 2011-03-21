@@ -40,8 +40,18 @@ public class Import extends Rebase {
 		}
 	}
 
+	/**
+	 * The file history is stored in a file called lshistory.bak.  If
+	 * the file does not already exist then it is created.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	private String _loadHistory() throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader(backup));
+		File f = new File(backup);
+		f.createNewFile();
+		FileReader fileReader = new FileReader(f);
+		BufferedReader reader = new BufferedReader(fileReader);
 		StringBuilder b = new StringBuilder();
 		for (String line; (line = reader.readLine()) != null;) {
 			b.append(line).append("\n");

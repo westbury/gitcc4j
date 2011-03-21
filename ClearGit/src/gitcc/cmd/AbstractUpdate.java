@@ -8,6 +8,7 @@ import gitcc.util.ExecException;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,19 @@ public abstract class AbstractUpdate extends Command {
 	@Override
 	public void init() {
 		super.init();
-		git.checkout(Config.DEFAULT_MASTER);
+		
+		try {
+			git.checkout(Config.DEFAULT_MASTER);
+		} catch (ExecException e) {
+			String x = e.getMessage();
+			String y = MessageFormat.format("error: pathspec ''{0}'' did not match any file(s) known to git.\n", Config.DEFAULT_MASTER);
+			if (x.equals(y)) {
+				System.err.println("There are no files checked into the branch.  You must checkout first.");
+				System.exit(1);
+			}
+			throw e;
+		}
+		
 		git.setConfig("receive.denyCurrentBranch", "true");
 		// git.setConfig("receive.denyNonFastForwards", "true");
 	}

@@ -107,8 +107,13 @@ public class GitImpl extends Exec implements Git {
 	}
 
 	@Override
-	public void branchForce(String branch, String id) {
-		exec("branch", "-f", branch, id);
+	public void branchForce(String branchName, String commitId) {
+		exec("branch", "-f", branchName, commitId);
+	}
+
+	@Override
+	public void tagForce(String tagName, String commitId) {
+		exec("tag", "-f", tagName, commitId);
 	}
 
 	@Override
